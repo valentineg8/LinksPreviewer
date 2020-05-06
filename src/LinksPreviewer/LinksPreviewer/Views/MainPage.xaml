@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:b="clr-namespace:LinksPreviewer.Behaviors"
+             xmlns:xamanimation="clr-namespace:Xamanimation;assembly=Xamanimation"
+             x:Class="LinksPreviewer.Views.MainPage">
+    <StackLayout Padding="20">
+       
+        <!--Multiple Link-->
+        <StackLayout BindableLayout.ItemsSource="{Binding Links}">
+           <BindableLayout.ItemTemplate>
+               <DataTemplate>
+                   <Grid BackgroundColor="#333"
+                         IsVisible="{Binding Found}"
+                         Padding="10">
+                        <Grid.Behaviors>
+                            <xamanimation:EntranceTransition
+	                            Duration="1000"/>
+                        </Grid.Behaviors>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="20" />
+                            <RowDefinition Height="80" />
+                        </Grid.RowDefinitions>
+                        <Image Source="{Binding Image}"
+                                Grid.RowSpan="2"
+                                HorizontalOptions="Start"
+                                Aspect="AspectFill"
+                                VerticalOptions="FillAndExpand"/>
+                        <Label Text="{Binding Title}"
+                                Grid.Column="1"
+                                TextColor="White" />
+                        <Label Text="{Binding Description}"
+                                Grid.Column="1"
+                                FontSize="Small"
+                                Grid.Row="1"
+                                TextColor="#999"  />
+                    </Grid>
+               </DataTemplate>
+           </BindableLayout.ItemTemplate>
+        </StackLayout>
+        <!--Single Link-->
+         <Grid BackgroundColor="#333"
+               IsVisible="{Binding EditorLink.Found}"
+               Padding="10">
+            <Grid.Behaviors>
+                <xamanimation:EntranceTransition
+	                Duration="1000"/>
+            </Grid.Behaviors>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="20" />
+                <RowDefinition Height="80" />
+            </Grid.RowDefinitions>
+            <Image Source="{Binding EditorLink.Image}"
+                    Grid.RowSpan="2"
+                    HorizontalOptions="Start"
+                    Aspect="AspectFill"
+                    VerticalOptions="FillAndExpand"/>
+            <Label Text="{Binding EditorLink.Title}"
+                    Grid.Column="1"
+                    TextColor="White" />
+            <Label Text="{Binding EditorLink.Description}"
+                    Grid.Column="1"
+                    FontSize="Small"
+                    Grid.Row="1"
+                    TextColor="#999"  />
+        </Grid>
+        <Editor HorizontalOptions="FillAndExpand"
+                HeightRequest="200"
+                Placeholder="Write Something"
+                BackgroundColor="#eee">
+            <Editor.Behaviors>
+                <b:LinksPreviewBehavior Link="{Binding EditorLink}"
+                                        Links="{Binding Links}"
+                                        HasMultiple="True"/>
+            </Editor.Behaviors>
+        </Editor>
+    </StackLayout>
+</ContentPage>

@@ -9,9 +9,6 @@ namespace LinksPreviewer.ViewModels
 {
     public class MainPageViewModel : BindableBase, INotifyPropertyChanged
     {
-        public ObservableCollection<Link> Links { get; set; }
-
-        public Link EditorLink { get; set; }
         public MainPageViewModel()
         {
         }

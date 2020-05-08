@@ -3,6 +3,9 @@
 # LinksPreviewer
 ----
 
+<img src="images/ios.gif" Width="400" />
+<img src="images/android.gif" Width="400" />
+
 ### Platforms
 
 iOS.

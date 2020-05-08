@@ -196,9 +196,9 @@ namespace LinksPreviewer.Controls
                 Link newLink = new Link { URL = url };
 
                 if (metaInformation.ContainsKey("og:title"))
-                    newLink.Title = metaInformation["og:title"];
+                    newLink.Title = HttpUtility.HtmlDecode(metaInformation["og:title"]);
                 else
-                    newLink.Title = Regex.Match(html, "(?<=<title>)(.*?)(?=</title>)").ToString();
+                    newLink.Title = HttpUtility.HtmlDecode(Regex.Match(html, "(?<=<title>)(.*?)(?=</title>)").ToString());
 
                 if (metaInformation.ContainsKey("og:description"))
                     newLink.Description = HttpUtility.HtmlDecode(metaInformation["og:description"]);

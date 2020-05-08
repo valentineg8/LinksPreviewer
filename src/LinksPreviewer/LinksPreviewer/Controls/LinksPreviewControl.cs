@@ -43,7 +43,7 @@ namespace LinksPreviewer.Controls
 
 
         [TypeConverter(typeof(ReferenceTypeConverter))]
-        public View View
+        public View Control
         {
             set => LinkToLinksPreviewControl(this, value);
         }

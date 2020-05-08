@@ -38,7 +38,7 @@
                      Spacing="0"
                      Margin="10">
             <!--Label Link Preview-->
-            <controls:LinksPreviewControl Label="label"
+            <controls:LinksPreviewControl View="label"
                                           ItemTemplate="{StaticResource linkPreviewDataTemplate}" />
             <Label x:Name="label"
                     TextColor="White"
@@ -49,7 +49,7 @@
 
 
         <!--Editor Link Preview-->
-        <controls:LinksPreviewControl InputView="editor"
+        <controls:LinksPreviewControl View="editor"
                                       Spacing="0"
                                       VerticalOptions="EndAndExpand"
                                       ItemTemplate="{StaticResource linkPreviewDataTemplate}" />

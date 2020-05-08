@@ -43,53 +43,31 @@ namespace LinksPreviewer.Controls
 
 
         [TypeConverter(typeof(ReferenceTypeConverter))]
-        public InputView InputView
+        public View View
         {
             set => LinkToLinksPreviewControl(this, value);
         }
 
-        static void LinkToLinksPreviewControl(LinksPreviewControl control, InputView inputView)
+        static void LinkToLinksPreviewControl(LinksPreviewControl control, View view)
         {
-            if (inputView == null)
+            if (view == null)
                 return;
-
-            if (control.HasElement)
-               throw new Exception("cannot set Label and InputView");
-            control.HasElement = true;
-            inputView.PropertyChanged += (object sender, System.ComponentModel.PropertyChangedEventArgs e) =>
+            System.ComponentModel.PropertyChangedEventHandler properyChanged = (object sender, System.ComponentModel.PropertyChangedEventArgs e) =>
             {
                 if (e.PropertyName == "Text")
                 {
-                    control.CreateLinksPreview(inputView.Text);
+                    if(sender is Editor editor)
+                        control.CreateLinksPreview(editor.Text);
+                    else if (sender is Entry entry)
+                        control.CreateLinksPreview(entry.Text);
+                    else if (sender is Label label)
+                        control.CreateLinksPreview(label.Text);
                 }
             };
-        }
-
-        [TypeConverter(typeof(ReferenceTypeConverter))]
-        public Label Label
-        {
-            set => LinkToPreviewControl(this, value);
-        }
-
-        static void LinkToPreviewControl(LinksPreviewControl control, Label label)
-        {
-            
-            if (label == null)
-                return;
-            if (control.HasElement)
-                throw new Exception("cannot set Label and InputView");
-            control.HasElement = true;
-            label.PropertyChanged += (object sender, System.ComponentModel.PropertyChangedEventArgs e) =>
-            {
-                if (e.PropertyName == "Text")
-                {
-                    control.CreateLinksPreview(label.Text);
-                }
-            };
+           view.PropertyChanged += properyChanged;
         }
 
         public List<Link> Links { get; set; }
-        bool HasElement { get; set; }
         readonly HttpClient Client;
         StackLayout _mainContentLayout;
         public LinksPreviewControl()

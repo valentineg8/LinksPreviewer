@@ -5,7 +5,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using LinksPreviewer.Models;
+using System.Web;
 using Xamarin.Forms;
 
 namespace LinksPreviewer.Controls
@@ -88,7 +88,6 @@ namespace LinksPreviewer.Controls
             };
         }
 
-
         public List<Link> Links { get; set; }
         bool HasElement { get; set; }
         readonly HttpClient Client;
@@ -99,6 +98,8 @@ namespace LinksPreviewer.Controls
             Content = _mainContentLayout;
             Links = new List<Link>();
             Client = new HttpClient();
+            Client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("text/plain"));
+            Client.DefaultRequestHeaders.Add("user-agent", "Mozilla/4.0 (compatible; MSIE 6.0; " + "Windows NT 5.2; .NET CLR 1.0.3705;)");
         }
         static void OrientationPropertyChanged(BindableObject bindable, object oldValue, object newValue)
         {
@@ -142,18 +143,34 @@ namespace LinksPreviewer.Controls
             {
                 var link = newList.FirstOrDefault(el => el == item.BindingContext);
                 if (link == null)
+                {
+                    await Task.WhenAll(item.TranslateTo(0, 20, 300), item.FadeTo(0, 300));
                     _mainContentLayout.Children.Remove(item);
+                }
             }
             Links = newList;
         }
 
-        protected virtual View CreateNewItem(object item)
+        protected virtual View CreateNewItem(Link item)
         {
             View view = null;
             if (ItemTemplate != null)
             {
                 var content = ItemTemplate.CreateContent();
+
                 view = (content is View) ? content as View : ((ViewCell)content).View;
+
+
+                view.Opacity = 0;
+                view.IsVisible = false;
+
+                if(item.Found)
+                {
+                    view.TranslationY = 20;
+                    view.IsVisible = true;
+                    view.TranslateTo(0, 0, 300);
+                    view.FadeTo(1, 300);
+                }
 
                 view.BindingContext = item;
             }
@@ -184,14 +201,16 @@ namespace LinksPreviewer.Controls
                     newLink.Title = Regex.Match(html, "(?<=<title>)(.*?)(?=</title>)").ToString();
 
                 if (metaInformation.ContainsKey("og:description"))
-                    newLink.Description = metaInformation["og:description"];
+                    newLink.Description = HttpUtility.HtmlDecode(metaInformation["og:description"]);
                 else if (metaInformation.ContainsKey("twitter:description"))
-                    newLink.Description = metaInformation["twitter:description"];
+                    newLink.Description = HttpUtility.HtmlDecode(metaInformation["twitter:description"]);
                 else if (metaInformation.ContainsKey("description"))
-                    newLink.Description = metaInformation["description"];
+                    newLink.Description = HttpUtility.HtmlDecode(metaInformation["description"]);
 
                 if (metaInformation.ContainsKey("og:image"))
-                    newLink.Image = metaInformation["og:image"];
+                    newLink.Image = metaInformation["og:image"][0] == '/' ? $"{url}{metaInformation["og:image"]}" : metaInformation["og:image"];
+                    
+                
 
                 return newLink;
 
@@ -202,6 +221,21 @@ namespace LinksPreviewer.Controls
                 return null;
             }
 
+        }
+    }
+
+    public class Link
+    {
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public string Image { get; set; }
+        public string URL { get; set; }
+        public bool Found
+        {
+            get
+            {
+                return !string.IsNullOrEmpty(Title) || !string.IsNullOrEmpty(Description) || !string.IsNullOrEmpty(Image);
+            }
         }
     }
 }

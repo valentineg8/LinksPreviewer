@@ -1,108 +1,67 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:b="clr-namespace:LinksPreviewer.Behaviors"
-             xmlns:xamanimation="clr-namespace:Xamanimation;assembly=Xamanimation" xmlns:controls="clr-namespace:LinksPreviewer.Controls"
+             xmlns:controls="clr-namespace:LinksPreviewer.Controls"
              x:Class="LinksPreviewer.Views.MainPage">
-    <ScrollView>
-        <StackLayout Spacing="0">
-            <StackLayout BackgroundColor="#666"
-                         Margin="10">
-                <!--Label Link Preview-->
-                <controls:LinksPreviewControl Label="label"
-                                              Orientation="Horizontal">
-                    <controls:LinksPreviewControl.ItemTemplate>
-                        <DataTemplate>
-                            <Grid BackgroundColor="#333"
-                                  IsVisible="{Binding Found}">
-                                <Grid.Behaviors>
-                                    <xamanimation:EntranceTransition
-	                                    Duration="500"/>
-                                </Grid.Behaviors>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="20" />
-                                    <RowDefinition Height="80" />
-                                </Grid.RowDefinitions>
-                                <Image Source="{Binding Image}"
-                                        Grid.RowSpan="2"
-                                        HorizontalOptions="Start"
-                                        Aspect="AspectFill"
-                                        VerticalOptions="FillAndExpand"/>
-                                <Label Text="{Binding Title}"
-                                       LineBreakMode="TailTruncation"
-                                       Grid.Column="1"
-                                       TextColor="White" />
-                                <Label Text="{Binding Description}"
-                                       Grid.Column="1"
-                                       FontSize="Small"
-                                       Grid.Row="1"
-                                       TextColor="#999"  />
-                                
-                            </Grid>
-                        </DataTemplate>
-                    </controls:LinksPreviewControl.ItemTemplate>
-                 </controls:LinksPreviewControl>
-                <Label x:Name="label"
-                       TextColor="White"
-                       Padding="5"
-                       FontSize="Small"
-                       Text="Watch this video: https://www.youtube.com/watch?v=G90UBKrkdVo" />
-            </StackLayout>
-
-
-            <!--Editor Link Preview-->
-            <controls:LinksPreviewControl InputView="editor"
-                                          Spacing="0"
-                                          VerticalOptions="EndAndExpand">
-                <controls:LinksPreviewControl.ItemTemplate>
-                    <DataTemplate>
-                        <Grid BackgroundColor="#333"
-                              IsVisible="{Binding Found}"
-                              Padding="0">
-                            <Grid.Behaviors>
-                                <xamanimation:EntranceTransition
-	                                Duration="500"/>
-                            </Grid.Behaviors>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="20" />
-                                <RowDefinition Height="80" />
-                            </Grid.RowDefinitions>
-                            <Image Source="{Binding Image}"
-                                   Grid.RowSpan="2"
-                                   HorizontalOptions="Start"
-                                   Aspect="AspectFill"
-                                   VerticalOptions="FillAndExpand"/>
-                            <Label Text="{Binding Title}"
-                                   VerticalOptions="CenterAndExpand"
-                                   LineBreakMode="TailTruncation"
-                                   Grid.Column="1"
-                                   TextColor="White" />
-                            <Label Text="{Binding Description}"
-                                   Grid.Column="1"
-                                   FontSize="Small"
-                                   Grid.Row="1"
-                                   TextColor="#999"  />
-                        </Grid>
-                    </DataTemplate>
-                </controls:LinksPreviewControl.ItemTemplate>
-             </controls:LinksPreviewControl>
-            <Editor HorizontalOptions="FillAndExpand"
-                    x:Name="editor"
-                    HeightRequest="100"
-                    Text="https://docs.microsoft.com/en-us/xamarin/xamarin-forms/xaml/xaml-basics/data-binding-basics"
-                    Placeholder="Write Something"
-                    VerticalOptions="End"
-                    BackgroundColor="#eee">
-            </Editor>
-
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <DataTemplate x:Key="linkPreviewDataTemplate">
+                <Grid BackgroundColor="#333"
+                      RowSpacing="0"
+                      Padding="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="20" />
+                        <RowDefinition Height="80" />
+                    </Grid.RowDefinitions>
+                    <Image Source="{Binding Image}"
+                           Grid.RowSpan="2"
+                           Aspect="AspectFill"/>
+                    <Label Text="{Binding Title}"
+                           LineBreakMode="TailTruncation"
+                           Grid.Column="1"
+                           TextColor="White" />
+                    <Label Text="{Binding Description}"
+                           Grid.Column="1"
+                           FontSize="Small"
+                           Grid.Row="1"
+                           TextColor="#999"  />
+                </Grid>
+            </DataTemplate>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <StackLayout Spacing="0">   
+        <StackLayout BackgroundColor="#666"
+                     Spacing="0"
+                     Margin="10">
+            <!--Label Link Preview-->
+            <controls:LinksPreviewControl Label="label"
+                                          ItemTemplate="{StaticResource linkPreviewDataTemplate}" />
+            <Label x:Name="label"
+                    TextColor="White"
+                    Padding="5"
+                    FontSize="Small"
+                    Text="Watch these videos: https://www.youtube.com/watch?v=G90UBKrkdVo" />
         </StackLayout>
-    </ScrollView>
+
+
+        <!--Editor Link Preview-->
+        <controls:LinksPreviewControl InputView="editor"
+                                      Spacing="0"
+                                      VerticalOptions="EndAndExpand"
+                                      ItemTemplate="{StaticResource linkPreviewDataTemplate}" />
+        <Editor HorizontalOptions="FillAndExpand"
+                x:Name="editor"
+                HeightRequest="200"
+                PlaceholderColor="#999"
+                Placeholder="Write Something...."
+                VerticalOptions="End"
+                TextColor="White"
+                BackgroundColor="#333">
+        </Editor>
+
+    </StackLayout>
 </ContentPage>
